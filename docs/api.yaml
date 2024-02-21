@@ -1,0 +1,52 @@
+openapi: 3.0.3
+info:
+  title: Blog
+  version: 1.0.0
+tags:
+  - name: user
+    description: Users
+    externalDocs:
+      description: Find out more
+      url: https://github.com/marekvks/DVWB-Zaverecka-Server
+paths:
+  /register:
+    post:
+      tags:
+        - user
+      summary: Register a new user
+      description: Register a new user
+      operationId: RegisterUser
+      requestBody:
+        description: Register a new user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: invalid data
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        username:
+          type: string
+          example: marekvks
+        password:
+          type: string
+          example: password123
+        createdAt:
+          type: string
+          format: date-time
