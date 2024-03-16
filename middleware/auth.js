@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { refreshTokens, users } from '../routes/auth/auth.js'
+import { refreshTokens, users } from '../routes/auth/auth.js';
 
 export const verifyAccessToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -53,12 +53,11 @@ export const validLoginData = async (req, res, next) => {
 }
 
 export const generateAccessToken = (user) => {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30m' });
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
 }
 
 export const generateRefreshToken = (user) => {
     const token = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
     refreshTokens.push(token);
-    console.log(token);
     return token;
 }

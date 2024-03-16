@@ -10,7 +10,7 @@ export const users = [];
 
 export let refreshTokens = [];
 
-router.get('/test', verifyAccessToken, (req, res) => {
+router.get('/loggedIn', verifyAccessToken, (req, res) => {
     res.sendStatus(200);
 });
 
@@ -30,21 +30,18 @@ router.post('/register', validRegisterData, userAlreadyExists, async (req, res) 
 
     users.push(newUser);
     res.sendStatus(201);
-    console.log(users);
 });
 
 router.post('/login', validLoginData, async (req, res) => {
     const user = req.user;
 
-    console.log(user.id);
-
     const accessToken = generateAccessToken({ id: user.id });
     const refreshToken = generateRefreshToken({ id: user.id });
-    res.json({ accessToken: accessToken, refreshToken: refreshToken });
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false }).json({ accessToken: accessToken, expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
 });
 
 router.post('/token', (req, res) => {
-    const refreshToken = req.body.token;
+    const refreshToken = req.cookies['refreshToken'];
     if (!refreshToken) return res.sendStatus(401);
     if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
 
@@ -52,7 +49,7 @@ router.post('/token', (req, res) => {
         if (err) return res.sendStatus(403);
 
         const accessToken = generateAccessToken({ id: user.id });
-        res.json({ accessToken });
+        res.json({ accessToken, expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
     });
 });
 
