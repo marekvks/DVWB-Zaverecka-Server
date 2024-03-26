@@ -2,6 +2,9 @@ import 'dotenv/config';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { refreshTokens, users } from '../routes/auth/auth.js';
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient();
 
 export const verifyAccessToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -20,35 +23,61 @@ export const validRegisterData = (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
 
+    // check if email rules correspond
+
     if (!username || !email || !password)
         return res.status(400).json({ message: 'invalid data.' });
 
     next();
 }
 
-export const userAlreadyExists = (req, res, next) => {
+export const userAlreadyExists = async (req, res, next) => {
     const username = req.body.username;
     const email = req.body.email;
 
-    if (users.find(usr => usr.email === email))
-        return res.status(400).json({ message: 'email is already in use.' });
-    else if (users.find(usr => usr.username === username))
-        return res.status(400).json({ message: 'username is already used' });
+    const data = await prisma.users.findMany({
+        select: {
+            name: true,
+            email: true
+        },
+        where: {
+            OR: [
+                { name: username },
+                { email: email }
+            ]
+        }
+    });
+
+    if (data.length >= 1)
+        return res.status(400).json({ message: 'username or email is already used.' });
 
     next();
 }
 
 export const validLoginData = async (req, res, next) => {
     const email = req.body.email;
-    const user = users.find(usr => usr.email == email);
-    if (!user)
+
+    const data = await prisma.users.findFirst({
+        select: {
+            id_user: true,
+            email: true,
+            password: true
+        },
+        where: {
+            email: email
+        }
+    });
+
+    if (data.length <= 0)
         return res.status(400).json({ message: 'invalid email or password.' });
 
     const password = req.body.password;
-    const matchingPwd = await bcrypt.compare(password, user.password);
-    if (!matchingPwd) return res.status(400).json({ message: 'invalid email or password.' });
 
-    req.user = user;
+    const matchingPwd = await bcrypt.compare(password, data.password);
+    if (!matchingPwd)
+        return res.status(400).json({ message: 'invalid email or password.' });
+
+    req.userId = data.id_user;
     next();
 }
 
