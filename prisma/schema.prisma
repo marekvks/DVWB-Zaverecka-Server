@@ -7,17 +7,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
+model user {
   id_user  Int      @id @default(autoincrement())
-  name     String   @db.VarChar(32)
-  email    String   @db.VarChar(64)
+  username String @unique
+  firstName     String   @db.VarChar(16)
+  surName String  @db.VarChar(16)
+  email    String   @db.VarChar(64) @unique
   password String   @db.VarChar(128)
   tokens   tokens[]
+  blogPosts blogPost[] @relation("Author")
+  role role @default(USER)
 }
 
 model tokens {
   id_token Int    @id @default(autoincrement())
   id_user  Int
   token    String
-  users    users  @relation(fields: [id_user], references: [id_user], onDelete: Cascade, onUpdate: NoAction)
+  users    user  @relation(fields: [id_user], references: [id_user], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model blogPost{
+  id_blogpost String @id @default(uuid()) @unique
+  date DateTime @default(now())
+  lastUpdated DateTime @updatedAt
+  title String
+  autohor user @relation("Author", fields: [id_author], references: [id_user], onDelete: Cascade)
+  id_author Int
+  categories category[]
+}
+
+model category{
+  id    Int    @id @default(autoincrement())
+  name  String
+  posts blogPost[]
+}
+
+enum role{
+  USER
+  ADMIN
 }
