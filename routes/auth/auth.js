@@ -2,16 +2,13 @@ import 'dotenv/config';
 import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt, { hash } from 'bcrypt';
-import { verifyAccessToken, generateAccessToken, generateRefreshToken, validRegisterData, userAlreadyExists, validLoginData } from '../../middleware/auth.js';
-import { PrismaClient } from '@prisma/client'
+import { verifyAccessToken, generateAccessToken, generateRefreshToken, encryptRefreshToken, validRegisterData, userAlreadyExists, validLoginData } from '../../middleware/auth.js';
+import { PrismaClient } from '@prisma/client';
+import crypto from 'crypto';
 
 const prisma = new PrismaClient();
 
 const router = express.Router();
-
-export const users = [];
-
-export let refreshTokens = [];
 
 router.get('/loggedIn', verifyAccessToken, (req, res) => {
     res.sendStatus(200);
@@ -23,9 +20,9 @@ router.post('/register', validRegisterData, userAlreadyExists, async (req, res) 
     const password = req.body.password;
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await prisma.users.create({
+    await prisma.user.create({
         data: {
-            name: username,
+            username: username,
             email: email,
             password: hashedPassword
         }
@@ -40,10 +37,12 @@ router.post('/login', validLoginData, async (req, res) => {
     const accessToken = generateAccessToken({ id: userId });
     const refreshToken = generateRefreshToken({ id: userId });
 
+    const encryptedRefreshToken = encryptRefreshToken(refreshToken);
+
     await prisma.tokens.create({
         data: {
             id_user: userId,
-            token: refreshToken
+            token: encryptedRefreshToken
         }
     });
 
@@ -54,12 +53,15 @@ router.post('/token', async (req, res) => {
     const refreshToken = req.cookies['refreshToken'];
     if (!refreshToken) return res.sendStatus(401);
 
+    const encryptedToken = encryptRefreshToken(refreshToken);
+    console.log(encryptedToken);
+
     const data = await prisma.tokens.findFirst({
         select: {
             id_user: true
         },
         where: {
-            token: refreshToken
+            token: encryptedToken
         }
     });
 
@@ -74,19 +76,23 @@ router.post('/token', async (req, res) => {
 });
 
 router.delete('/logout', async (req, res) => {
-    const refreshToken = req.body.token;
+    const refreshToken = req.cookies['refreshToken'];
+    const encryptedToken = encryptRefreshToken(refreshToken);
+    console.log(encryptedToken);
 
     const data = await prisma.tokens.findFirst({
         select: {
             id_token: true
         },
         where: {
-            token: refreshToken
+            token: encryptedToken
         }
     });
 
-    if (data.length <= 0)
+    console.log(data);
+    if (!data)
         return res.status(400).json({ 'message': 'invalid token.' });
+
 
     await prisma.tokens.delete({
         where: {

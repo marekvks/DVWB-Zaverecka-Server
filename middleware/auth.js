@@ -1,8 +1,9 @@
 import 'dotenv/config';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { refreshTokens, users } from '../routes/auth/auth.js';
-import { PrismaClient } from '@prisma/client'
+import validator from 'email-validator';
+import { PrismaClient } from '@prisma/client';
+import crypto from 'crypto';
 
 const prisma = new PrismaClient();
 
@@ -23,7 +24,8 @@ export const validRegisterData = (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    // check if email rules correspond
+    if (!validator.validate(email))
+        return res.status(400).json({ message: 'invalid email.' });
 
     if (!username || !email || !password)
         return res.status(400).json({ message: 'invalid data.' });
@@ -35,29 +37,29 @@ export const userAlreadyExists = async (req, res, next) => {
     const username = req.body.username;
     const email = req.body.email;
 
-    const data = await prisma.users.findMany({
+    const data = await prisma.user.findMany({
         select: {
-            name: true,
+            username: true,
             email: true
         },
         where: {
             OR: [
-                { name: username },
+                { username: username },
                 { email: email }
             ]
         }
     });
 
-    if (data.length >= 1)
-        return res.status(400).json({ message: 'username or email is already used.' });
+    if (!data || data.length <= 0)
+        return next();
 
-    next();
+    return res.status(400).json({ message: 'username or email is already used.' });
 }
 
 export const validLoginData = async (req, res, next) => {
     const email = req.body.email;
 
-    const data = await prisma.users.findFirst({
+    const data = await prisma.user.findFirst({
         select: {
             id_user: true,
             email: true,
@@ -68,7 +70,7 @@ export const validLoginData = async (req, res, next) => {
         }
     });
 
-    if (data.length <= 0)
+    if (!data || data.length <= 0)
         return res.status(400).json({ message: 'invalid email or password.' });
 
     const password = req.body.password;
@@ -87,6 +89,17 @@ export const generateAccessToken = (user) => {
 
 export const generateRefreshToken = (user) => {
     const token = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
-    refreshTokens.push(token);
     return token;
+}
+
+export const encryptRefreshToken = (token) => {
+    
+    const algorithm = process.env.REFRESH_TOKEN_ENCRYPTION_ALGORITHM;
+    const key = Buffer.from(process.env.REFRESH_TOKEN_ENCRYPTION_KEY, 'hex');
+    const iv = Buffer.from(process.env.REFRESH_TOKEN_ENCRYPTION_IV, 'hex');
+
+    const cipher = crypto.createCipheriv(algorithm, key, iv);
+    let encrypted = cipher.update(token, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    return encrypted;
 }
