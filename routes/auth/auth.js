@@ -49,12 +49,11 @@ router.post('/login', validLoginData, async (req, res) => {
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false }).json({ accessToken: accessToken, expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
 });
 
-router.post('/token', async (req, res) => {
+router.get('/token', async (req, res) => {
     const refreshToken = req.cookies['refreshToken'];
-    if (!refreshToken) return res.sendStatus(401);
+    if (!refreshToken) return res.sendStatus(400);
 
     const encryptedToken = encryptRefreshToken(refreshToken);
-    console.log(encryptedToken);
 
     const data = await prisma.tokens.findFirst({
         select: {
@@ -71,14 +70,13 @@ router.post('/token', async (req, res) => {
         if (err) return res.sendStatus(403);
 
         const accessToken = generateAccessToken({ id: data.id_user });
-        res.json({ accessToken, expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
+        res.status(200).json({ accessToken, expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
     });
 });
 
 router.delete('/logout', async (req, res) => {
     const refreshToken = req.cookies['refreshToken'];
     const encryptedToken = encryptRefreshToken(refreshToken);
-    console.log(encryptedToken);
 
     const data = await prisma.tokens.findFirst({
         select: {
@@ -89,9 +87,8 @@ router.delete('/logout', async (req, res) => {
         }
     });
 
-    console.log(data);
     if (!data)
-        return res.status(400).json({ 'message': 'invalid token.' });
+        return res.status(404).json({ 'message': 'token not found.' });
 
 
     await prisma.tokens.delete({
