@@ -1,0 +1,34 @@
+GET http://localhost:3000/blogPost/blogPost
+
+###
+GET http://localhost:3000/blogPost/blogPostUser/user
+
+###
+
+GET http://localhost:3000/blogpost/blogPostTitle/Test
+
+###
+
+POST http://localhost:3000/blogPost/blogPost
+Content-Type: application/json
+
+{
+    "title": "jjjj",
+    "content": "Kasdadlkjdf sdfsdfasdf asdfasdfasdf safg  fg df gdf g df gd fg df gd g dfg df gd fg f",
+    "id_author": 1
+}
+
+###
+
+PATCH http://localhost:3000/blogPost/blogPost/9a892aa0-c478-453c-95c0-e18f0f6cb762
+Content-Type: application/json
+
+{
+    "title": "Proc ne",
+    "content": "Kasdadlkjdf sdfsdfasdf asdfasdfasdf safg  fg df gdf g df gd fg df gd g dfg df gd fg f",
+    "id_author": 1
+}
+
+###
+DELETE http://localhost:3000/blogPost/blogPost/9a892aa0-c478-453c-95c0-e18f0f6cb762
+
