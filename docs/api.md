@@ -107,6 +107,7 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
     ```
     Responses
     ```
-        --- 204 No Content: Deleted
+        --- 204 No Content: deleted
+         |- 400 Bad Request: invalid token
          \- 404 Not Found: token not found
     ```
