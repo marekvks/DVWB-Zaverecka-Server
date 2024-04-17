@@ -45,14 +45,13 @@ router.post('/login', validLoginData, async (req, res) => {
         }
     });
 
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, path: '/auth' })
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, path: '/' })
        .cookie('accessToken', accessToken, { httpOnly: false, secure: false, path: '/' })
        .json({ accessTokenExpiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
 });
 
 router.get('/token', async (req, res) => {
     const refreshToken = req.cookies['refreshToken'];
-    console.log(refreshToken);
     if (!refreshToken) return res.sendStatus(400);
 
     const encryptedToken = encryptRefreshToken(refreshToken);
@@ -74,7 +73,7 @@ router.get('/token', async (req, res) => {
         const accessToken = generateAccessToken({ id: data.id_user });
         res.cookie('accessToken', accessToken, { httpOnly: false, secure: false, path: '/' })
            .status(200)
-           .json({ accessTokenExpiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
+           .json({ 'accessToken': accessToken, expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
         });
 });
 
