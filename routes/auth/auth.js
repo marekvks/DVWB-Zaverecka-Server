@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import bcrypt, { hash } from 'bcrypt';
 import { verifyAccessToken, generateAccessToken, generateRefreshToken, encryptRefreshToken, validRegisterData, userAlreadyExists, validLoginData } from '../../middleware/auth.js';
 import { PrismaClient } from '@prisma/client';
-import crypto from 'crypto';
 
 const prisma = new PrismaClient();
 
@@ -46,11 +45,14 @@ router.post('/login', validLoginData, async (req, res) => {
         }
     });
 
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false }).json({ accessToken: accessToken, expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, path: '/auth' })
+       .cookie('accessToken', accessToken, { httpOnly: false, secure: false, path: '/' })
+       .json({ accessTokenExpiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
 });
 
 router.get('/token', async (req, res) => {
     const refreshToken = req.cookies['refreshToken'];
+    console.log(refreshToken);
     if (!refreshToken) return res.sendStatus(400);
 
     const encryptedToken = encryptRefreshToken(refreshToken);
@@ -70,12 +72,17 @@ router.get('/token', async (req, res) => {
         if (err) return res.sendStatus(403);
 
         const accessToken = generateAccessToken({ id: data.id_user });
-        res.status(200).json({ accessToken, expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
-    });
+        res.cookie('accessToken', accessToken, { httpOnly: false, secure: false, path: '/' })
+           .status(200)
+           .json({ accessTokenExpiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
+        });
 });
 
 router.delete('/logout', async (req, res) => {
     const refreshToken = req.cookies['refreshToken'];
+    if (!refreshToken)
+        return res.status(400).json({ 'message': 'invalid token.' });
+
     const encryptedToken = encryptRefreshToken(refreshToken);
 
     const data = await prisma.tokens.findFirst({
@@ -90,11 +97,10 @@ router.delete('/logout', async (req, res) => {
     if (!data)
         return res.status(404).json({ 'message': 'token not found.' });
 
-
     await prisma.tokens.delete({
         where: {
             id_token: data.id_token,
-            token: refreshToken
+            token: encryptedToken
         }
     });
 
