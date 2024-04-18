@@ -20,6 +20,8 @@ app.use(cors({
 
 app.use('/auth', authRouter);
 
+app.use('/user', userRouter);
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
