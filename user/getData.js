@@ -25,25 +25,22 @@ router.get('/getUser', verifyAccessToken, async (req, res) => {
     }
 });
 
+router.post('/updateUser', verifyAccessToken, async (req, res) => {
+    const { firstName, username } = req.body;
+    const userId = req.user.id;
 
-//víc specific request
-router.get('/getUserName/', async (req, res) => {
-    const { id } = req.params;
     try {
-        const user = await prisma.user.findUnique({
-            where: {
-                id: parseInt(id)
+        const updatedUser = await prisma.user.update({
+            where: { id_user: userId },
+            data: {
+                firstName,
+                username
             }
         });
-
-        if (user) {
-            res.json(user);
-        } else {
-            res.status(404).send('User not found');
-        }
+        res.json(updatedUser);
     } catch (error) {
-        console.error('Failed to retrieve user:', error);
-        res.status(500).send('Server error');
+        console.error("Failed to update user:", error);
+        res.status(500).send("An error occurred while updating the user.");
     }
 });
 
