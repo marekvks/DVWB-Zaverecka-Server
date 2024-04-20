@@ -29,6 +29,7 @@ model blogPost {
   date        DateTime @default(now())
   lastUpdated DateTime @updatedAt
   title String
+  description String
   content String
   autohor user @relation("Author", fields: [id_author], references: [id_user], onDelete: Cascade)
   id_author Int

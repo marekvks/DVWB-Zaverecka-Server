@@ -54,6 +54,7 @@ router.patch('/blogPost/:id', validateData, async (req, res) => {
 router.post('/blogPost', verifyAccessToken, validateData, async(req, res) => {
 
     const title = req.body.title;
+    const description = req.body.description;
     const content = req.body.content;
     const id_author = req.user.id;
     const categoryName = req.body.categoryName;
@@ -61,6 +62,7 @@ router.post('/blogPost', verifyAccessToken, validateData, async(req, res) => {
     await prisma.blogPost.create({
         data:{
             title: title,
+            description: description,
             content: content,
             id_author: id_author
         }
