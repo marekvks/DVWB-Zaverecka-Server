@@ -8,27 +8,25 @@ datasource db {
 }
 
 model user {
-  id_user  Int      @id @default(autoincrement())
-  username String @unique
-  firstName     String   @db.VarChar(16)
-  surName String  @db.VarChar(16)
-  email    String   @db.VarChar(64) @unique
-  password String   @db.VarChar(128)
-  tokens   tokens[]
+  id_user   Int     @id @default(autoincrement())
+  username  String  @unique
+  firstName String? @db.VarChar(16)
+  lastName  String? @db.VarChar(16)
+  email     String  @unique @db.VarChar(64)
+  password  String  @db.VarChar(128)
+  role      role    @default(USER)
   blogPosts blogPost[] @relation("Author")
-  role role @default(USER)
 }
 
 model tokens {
   id_token Int    @id @default(autoincrement())
   id_user  Int
   token    String
-  users    user  @relation(fields: [id_user], references: [id_user], onDelete: Cascade, onUpdate: NoAction)
 }
 
-model blogPost{
-  id_blogpost String @id @default(uuid()) @unique
-  date DateTime @default(now())
+model blogPost {
+  id_blogpost String   @id @unique @default(uuid())
+  date        DateTime @default(now())
   lastUpdated DateTime @updatedAt
   title String
   content String
@@ -37,13 +35,22 @@ model blogPost{
   categories category[]
 }
 
-model category{
-  id    Int    @id @default(autoincrement())
-  name  String
+model category {
+  id   Int    @id @default(autoincrement())
+  name String
   posts blogPost[]
 }
 
-enum role{
+model blogPostTocategory {
+  A String
+  B Int
+
+  @@unique([A, B], map: "_blogPostTocategory_AB_unique")
+  @@index([B], map: "_blogPostTocategory_B_index")
+  @@map("_blogPostTocategory")
+}
+
+enum role {
   USER
   ADMIN
 }
