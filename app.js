@@ -7,7 +7,7 @@ import authRouter from './routes/auth/auth.js';
 import blogPostRouter from './routes/auth/blogPost.js'
 import cookieParser from 'cookie-parser';
 
-const port = 3000;
+const port = 3001;
 
 const app = express();
 

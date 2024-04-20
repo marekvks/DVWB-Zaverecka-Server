@@ -1,6 +1,7 @@
 import express from "express";
 import { PrismaClient } from '@prisma/client'
 import {getRandomBlogPosts, validateData, dataToUpdate} from '../../middleware/blogPost.js';
+import {verifyAccessToken} from '../../middleware/auth.js';
 
 const prisma = new PrismaClient();
 
@@ -50,18 +51,18 @@ router.patch('/blogPost/:id', validateData, async (req, res) => {
     res.sendStatus(200);
 });
 
-router.post('/blogPost', validateData, async(req, res) => {
+router.post('/blogPost', verifyAccessToken, validateData, async(req, res) => {
 
     const title = req.body.title;
     const content = req.body.content;
-    const id_author = req.body.id_author;
+    const id_author = req.user.id;
     const categoryName = req.body.categoryName;
 
     await prisma.blogPost.create({
         data:{
             title: title,
             content: content,
-            id_author: id_author
+            //id_author: id_author
         }
     });
 
