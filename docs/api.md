@@ -111,3 +111,20 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
          |- 400 Bad Request: invalid token
          \- 404 Not Found: token not found
     ```
+## UserData
+- GET === /userData
+      returns all user info
+      Expected HTTP request
+  ```
+        GET http://localhost:8080/userData
+        Authorization: Bearer {ACCESS_TOKEN}
+
+        {
+        }
+    ```
+  Responses
+    ```
+        --- 400 Bad Request: invalid token
+        \-- 404 Not Found: user not found
+         \- 500 Server Error
+    ``` 
