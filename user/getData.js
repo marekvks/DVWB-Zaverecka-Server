@@ -1,16 +1,16 @@
 import express from "express";
 import { PrismaClient } from '@prisma/client';
-import { verifyAccessToken } from "../middleware/auth";
+import { verifyAccessToken } from "../middleware/auth.js";
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.get('/getUser', async (req, res) => {
-    const { id } = req.params;
+router.get('/getUser', verifyAccessToken, async (req, res) => {
+    const id = req.user.id;
     try {
-        const user = await prisma.user.findUnique({
+        const user = await prisma.user.findFirst({
             where: {
-                id: parseInt(id)
+                id_user: parseInt(id)
             }
         });
 
