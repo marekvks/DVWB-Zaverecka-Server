@@ -62,7 +62,7 @@ router.post('/blogPost', verifyAccessToken, validateData, async(req, res) => {
         data:{
             title: title,
             content: content,
-            //id_author: id_author
+            id_author: id_author
         }
     });
 
