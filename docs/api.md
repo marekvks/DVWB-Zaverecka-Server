@@ -1,7 +1,7 @@
 to see api documentation, open [swagger editor](https://editor.swagger.io) and paste the text from [api.yaml](https://github.com/marekvks/DVWB-Zaverecka-Server/blob/main/docs/api.yaml) in the editor
 
 # Endpoints
-> This will be trasfered to swagger eventually
+> This will be transfered to swagger eventually
 ## Auth
 - POST === /auth/register
     Register a user
@@ -107,6 +107,42 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
     ```
     Responses
     ```
-        --- 204 No Content: Deleted
+        --- 204 No Content: deleted
+         |- 400 Bad Request: invalid token
          \- 404 Not Found: token not found
+    ```
+## User
+- GET === /getUser
+      returns all user info
+      Expected HTTP request
+  ```
+        GET http://localhost:8080/user/getUser
+        Authorization: Bearer {ACCESS_TOKEN}
+
+        {
+        }
+    ```
+  Responses
+    ```
+        --- 400 Bad Request: invalid token
+        \-- 404 Not Found: user not found
+         \- 500 Server Error
+    ```
+- POST === /updateUser
+      updates user in db by the values
+      Expected HTTP request
+   ```
+        POST http://localhost:8080/user/updateUser
+        Content-Type: application/json
+        Authorization: Bearer {ACCESS_TOKEN}
+        {
+            "firstName": "{FIRSTNAME}",
+            "username": "{USERNAME}"
+        }
+    ```
+   Responses
+  ```
+        --- 400 Bad Request: invalid token
+        \-- 404 Not Found: user not found
+         \- 500 Server Error
     ```
