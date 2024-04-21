@@ -8,14 +8,14 @@ datasource db {
 }
 
 model user {
-  id_user   Int        @id @default(autoincrement())
-  username  String     @unique
-  firstName String?    @db.VarChar(16)
-  lastName  String?    @db.VarChar(16)
-  email     String     @unique @db.VarChar(64)
-  password  String     @db.VarChar(128)
-  role      role       @default(USER)
-  blogPost  blogPost[]
+  id_user   Int     @id @default(autoincrement())
+  username  String  @unique
+  firstName String? @db.VarChar(16)
+  lastName  String? @db.VarChar(16)
+  email     String  @unique @db.VarChar(64)
+  password  String  @db.VarChar(128)
+  role      role    @default(USER)
+  blogPosts blogPost[] @relation("Author")
 }
 
 model tokens {
@@ -25,21 +25,30 @@ model tokens {
 }
 
 model blogPost {
-  id_blogpost String     @id @unique @default(uuid())
-  date        DateTime   @default(now())
-  lastUpdated DateTime   @updatedAt
-  title       String
+  id_blogpost String   @id @unique @default(uuid())
+  date        DateTime @default(now())
+  lastUpdated DateTime @updatedAt
+  title String
   description String
-  content     String
-  id_author   Int
-  user        user       @relation(fields: [id_author], references: [id_user], onDelete: Cascade)
-  category    category[] @relation("blogPostTocategory")
+  content String
+  autohor user @relation("Author", fields: [id_author], references: [id_user], onDelete: Cascade)
+  id_author Int
+  categories category[]
 }
 
 model category {
-  id       Int        @id @default(autoincrement())
-  name     String
-  blogPost blogPost[] @relation("blogPostTocategory")
+  id   Int    @id @default(autoincrement())
+  name String
+  posts blogPost[]
+}
+
+model blogPostTocategory {
+  A String
+  B Int
+
+  @@unique([A, B], map: "_blogPostTocategory_AB_unique")
+  @@index([B], map: "_blogPostTocategory_B_index")
+  @@map("_blogPostTocategory")
 }
 
 enum role {
