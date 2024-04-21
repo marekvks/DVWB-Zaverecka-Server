@@ -8,7 +8,7 @@ import blogPostRouter from './routes/auth/blogPost.js';
 import userRouter from './routes/user/getData.js';
 import cookieParser from 'cookie-parser';
 
-const port = 8080;
+const port = process.env.PORT;
 
 const app = express();
 
