@@ -4,7 +4,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import helmet from 'helmet';
 import authRouter from './routes/auth/auth.js';
-import userRouter from './user/getData.js';
+import userRouter from './routes/user/getData.js';
 import cookieParser from 'cookie-parser';
 
 const port = process.env.PORT;
