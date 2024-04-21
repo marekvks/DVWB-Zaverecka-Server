@@ -111,3 +111,38 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
          |- 400 Bad Request: invalid token
          \- 404 Not Found: token not found
     ```
+## User
+- GET === /getUser
+      returns all user info
+      Expected HTTP request
+  ```
+        GET http://localhost:8080/user/getUser
+        Authorization: Bearer {ACCESS_TOKEN}
+
+        {
+        }
+    ```
+  Responses
+    ```
+        --- 400 Bad Request: invalid token
+        \-- 404 Not Found: user not found
+         \- 500 Server Error
+    ```
+- POST === /updateUser
+      updates user in db by the values
+      Expected HTTP request
+   ```
+        POST http://localhost:8080/user/updateUser
+        Content-Type: application/json
+        Authorization: Bearer {ACCESS_TOKEN}
+        {
+            "firstName": "{FIRSTNAME}",
+            "username": "{USERNAME}"
+        }
+    ```
+   Responses
+  ```
+        --- 400 Bad Request: invalid token
+        \-- 404 Not Found: user not found
+         \- 500 Server Error
+    ```
