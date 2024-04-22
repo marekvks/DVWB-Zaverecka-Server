@@ -45,7 +45,7 @@ router.post('/login', validLoginData, async (req, res) => {
         }
     });
 
-    res.status(200).cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, path: '/' })
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, path: '/' })
        .cookie('accessToken', accessToken, { httpOnly: false, secure: false, path: '/' })
        .json({ accessTokenExpiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
 });
