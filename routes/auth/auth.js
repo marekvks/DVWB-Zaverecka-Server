@@ -45,14 +45,14 @@ router.post('/login', validLoginData, async (req, res) => {
         }
     });
 
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, path: '/' })
+    res.status(200).cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, path: '/' })
        .cookie('accessToken', accessToken, { httpOnly: false, secure: false, path: '/' })
        .json({ accessTokenExpiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
 });
 
 router.get('/token', async (req, res) => {
     const refreshToken = req.cookies['refreshToken'];
-    if (!refreshToken) return res.sendStatus(400);
+    if (!refreshToken) return res.sendStatus(403).json({ 'message': 'invalid refresh token.' });
 
     const encryptedToken = encryptRefreshToken(refreshToken);
 
@@ -68,7 +68,7 @@ router.get('/token', async (req, res) => {
     if (!data) return res.status(403).json({ 'message': 'invalid refresh token.' });
 
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403);
+        if (err) return res.sendStatus(500);
 
         const accessToken = generateAccessToken({ id: data.id_user });
         res.cookie('accessToken', accessToken, { httpOnly: false, secure: false, path: '/' })
@@ -80,7 +80,7 @@ router.get('/token', async (req, res) => {
 router.delete('/logout', async (req, res) => {
     const refreshToken = req.cookies['refreshToken'];
     if (!refreshToken)
-        return res.status(400).json({ 'message': 'invalid token.' });
+        return res.status(401).json({ 'message': 'invalid token.' });
 
     const encryptedToken = encryptRefreshToken(refreshToken);
 

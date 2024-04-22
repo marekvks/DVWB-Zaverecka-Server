@@ -21,7 +21,7 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
     Responses
     ```
         --- 201 Created
-         \- 400 Bad Request: username or email is already used || invalid email
+         \- 400 Bad Request: username or email is already   used || invalid email || invalid data
     ```
     201 response body
     ```
@@ -47,12 +47,11 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
     ```
     200 response
     ```
-        TTP/1.1 200 OK
-        Set-Cookie: refreshToken={REFRESH_TOKEN}; Path=/; HttpOnly
+        HTTP/1.1 200 OK
+        Set-Cookie: refreshToken={REFRESH_TOKEN}; Path=/; HttpOnly, accessToken={ACCESS_TOKEN}; Path=/
 
         {
-            "accessToken": "{ACCESS_TOKEN}",
-            "expiresIn": "{EXPIRATION}"
+            "AccessTokenExpiresIn": "{EXPIRATION}"
         }
     ```
 - GET === /auth/loggedIn
@@ -67,8 +66,7 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
     Responses
     ```
     --- 200 OK
-     |- 400 Bad Request: no token
-     \- 403 Forbidden: invalid token
+     \- 401 Unauthorized: invalid token
     ```
     200 response body
     ```
@@ -86,17 +84,20 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
     Responses
     ```
         --- 200 OK
-         |- 400 Bad Request: no token
-         \- 403 Forbidden: invalid refresh token
+         |- 403 Forbidden: invalid refresh token
+         \- 500 Internal Server Error
     ```
-    200 response body
+    200 response
     ```
+        HTTP/1.1 200 OK
+        Set-Cookie: accessToken={ACCESS_TOKEN}; Path=/;
+
         {
             "accessToken": "{ACCESS_TOKEN}",
             "expiresIn": "{EXPIRATION}"
         }
     ```
-- DELETE === /auth/token
+- DELETE === /auth/logout
     Expected HTTP request
     ```
         POST http://localhost:8080/auth/token
@@ -108,7 +109,7 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
     Responses
     ```
         --- 204 No Content: deleted
-         |- 400 Bad Request: invalid token
+         |- 401 Unauthorized: invalid token
          \- 404 Not Found: token not found
     ```
 ## User
