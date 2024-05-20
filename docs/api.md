@@ -55,10 +55,10 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
             "expiresIn": "{EXPIRATION}"
         }
     ```
-- GET === /auth/loggedIn
+- GET === /auth/authorized
     Expected HTTP request
     ```
-        GET http://localhost:8080/auth/loggedIn
+        GET http://localhost:8080/auth/authorized
         Authorization: Bearer {ACCESS_TOKEN}
 
         {
@@ -74,10 +74,10 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
     ```
         None
     ```
-- GET === /auth/token
+- GET === /auth/accessToken
     Expected HTTP request
     ```
-        POST http://localhost:8080/auth/token
+        POST http://localhost:8080/auth/accessToken
         Cookie: refreshToken={REFRESH_TOKEN}; Path=/; HttpOnly
 
         {
@@ -86,8 +86,8 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
     Responses
     ```
         --- 200 OK
-         |- 400 Bad Request: no token
-         \- 403 Forbidden: invalid refresh token
+         |- 404 Not Found: refresh token not found
+         \- 500 Internal Server Error
     ```
     200 response body
     ```
@@ -96,10 +96,10 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
             "expiresIn": "{EXPIRATION}"
         }
     ```
-- DELETE === /auth/token
+- GET === /auth/refreshToken
     Expected HTTP request
     ```
-        POST http://localhost:8080/auth/token
+        POST http://localhost:8080/auth/refreshToken
         Cookie: refreshToken={REFRESH_TOKEN}; Path=/; HttpOnly
 
         {
@@ -107,9 +107,23 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
     ```
     Responses
     ```
-        --- 204 No Content: deleted
-         |- 400 Bad Request: invalid token
-         \- 404 Not Found: token not found
+        --- 200 OK: refresh token is still valid
+         |- 201 Created: new refresh token sent
+         |- 404 Not Found: refresh token not found
+         \- 500 Internal Server Error
+    ```
+    200 response body
+    ```
+        {
+            "accessToken": "{ACCESS_TOKEN}",
+            "expiresIn": "{EXPIRATION}"
+        }
+    ```
+- DELETE === /auth/logout
+    Removes access and refresh token's cookies
+    Responses
+    ```
+        \- 200 OK
     ```
 
 ## Blogpost
