@@ -15,6 +15,7 @@ export const verifyAccessToken = (req, res, next) => {
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) return res.sendStatus(401);
         req.user = user;
+        console.log(user);
         next();
     });
 }
@@ -81,25 +82,4 @@ export const validLoginData = async (req, res, next) => {
 
     req.userId = data.id_user;
     next();
-}
-
-export const generateAccessToken = (user) => {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
-}
-
-export const generateRefreshToken = (user) => {
-    const token = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
-    return token;
-}
-
-export const encryptRefreshToken = (token) => {
-    
-    const algorithm = process.env.REFRESH_TOKEN_ENCRYPTION_ALGORITHM;
-    const key = Buffer.from(process.env.REFRESH_TOKEN_ENCRYPTION_KEY, 'hex');
-    const iv = Buffer.from(process.env.REFRESH_TOKEN_ENCRYPTION_IV, 'hex');
-
-    const cipher = crypto.createCipheriv(algorithm, key, iv);
-    let encrypted = cipher.update(token, 'utf8', 'hex');
-    encrypted += cipher.final('hex');
-    return encrypted;
 }
