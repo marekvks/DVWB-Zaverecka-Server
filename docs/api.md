@@ -4,7 +4,9 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
 > This will be transfered to swagger eventually
 ## Auth
 - POST === /auth/register
-    Register a user
+
+    Registers a user
+
     ! password is hashed by the server before being stored in a database !
 
     Expected HTTP request
@@ -28,7 +30,8 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
         None
     ```
 - POST === /auth/login
-    Log-in as a user
+
+    Logs a user in
 
     Expected HTTP request
     ```
@@ -56,6 +59,9 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
         }
     ```
 - GET === /auth/authorized
+
+    Checks if user is authorized
+
     Expected HTTP request
     ```
         GET http://localhost:8080/auth/authorized
@@ -75,6 +81,9 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
         None
     ```
 - GET === /auth/accessToken
+
+    If refresh token is valid, new access token is sent
+
     Expected HTTP request
     ```
         POST http://localhost:8080/auth/accessToken
@@ -97,6 +106,9 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
         }
     ```
 - GET === /auth/refreshToken
+
+    If refresh token expires in less than 7 days, new refresh token is sent, otherwise nothing is done
+
     Expected HTTP request
     ```
         POST http://localhost:8080/auth/refreshToken
@@ -120,7 +132,9 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
         }
     ```
 - DELETE === /auth/logout
+
     Removes access and refresh token's cookies
+
     Responses
     ```
         \- 200 OK
