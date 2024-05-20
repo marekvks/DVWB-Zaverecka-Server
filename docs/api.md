@@ -9,7 +9,7 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
 
     ! password is hashed by the server before being stored in a database !
 
-    Expected HTTP request
+    `Expected HTTP request`
     ```
         POST http://localhost:8080/auth/register
         Content-Type: application/json
@@ -20,12 +20,12 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
             "password": "{PASSWORD}"
         }
     ```
-    Responses
+    `Responses`
     ```
         --- 201 Created
          \- 400 Bad Request: username or email is already used || invalid email
     ```
-    201 response body
+    `201 response body`
     ```
         None
     ```
@@ -33,7 +33,7 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
 
     Logs a user in
 
-    Expected HTTP request
+    `Expected HTTP request`
     ```
         POST http://localhost:8080/auth/login
         Content-Type: application/json
@@ -43,12 +43,12 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
             "password": "{PASSWORD}"
         }
     ```
-    Responses
+    `Responses`
     ```
         --- 200 OK
          \- 400 Bad Request: invalid email or password
     ```
-    200 response
+    `200 response`
     ```
         TTP/1.1 200 OK
         Set-Cookie: refreshToken={REFRESH_TOKEN}; Path=/; HttpOnly
@@ -62,7 +62,7 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
 
     Checks if user is authorized
 
-    Expected HTTP request
+    `Expected HTTP request`
     ```
         GET http://localhost:8080/auth/authorized
         Authorization: Bearer {ACCESS_TOKEN}
@@ -70,13 +70,13 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
         {
         }
     ```
-    Responses
+    `Responses`
     ```
     --- 200 OK
      |- 400 Bad Request: no token
      \- 403 Forbidden: invalid token
     ```
-    200 response body
+    `200 response body`
     ```
         None
     ```
@@ -84,7 +84,7 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
 
     If refresh token is valid, new access token is sent
 
-    Expected HTTP request
+    `Expected HTTP request`
     ```
         POST http://localhost:8080/auth/accessToken
         Cookie: refreshToken={REFRESH_TOKEN}; Path=/; HttpOnly
@@ -92,13 +92,13 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
         {
         }
     ```
-    Responses
+    `Responses`
     ```
         --- 200 OK
          |- 404 Not Found: refresh token not found
          \- 500 Internal Server Error
     ```
-    200 response body
+    `200 response body`
     ```
         {
             "accessToken": "{ACCESS_TOKEN}",
@@ -109,7 +109,7 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
 
     If refresh token expires in less than 7 days, new refresh token is sent, otherwise nothing is done
 
-    Expected HTTP request
+    `Expected HTTP request`
     ```
         POST http://localhost:8080/auth/refreshToken
         Cookie: refreshToken={REFRESH_TOKEN}; Path=/; HttpOnly
@@ -117,14 +117,14 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
         {
         }
     ```
-    Responses
+    `Responses`
     ```
         --- 200 OK: refresh token is still valid
          |- 201 Created: new refresh token sent
          |- 404 Not Found: refresh token not found
          \- 500 Internal Server Error
     ```
-    200 response body
+    `200 response body`
     ```
         {
             "accessToken": "{ACCESS_TOKEN}",
@@ -135,7 +135,7 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
 
     Removes access and refresh token's cookies
 
-    Responses
+    `Responses`
     ```
         \- 200 OK
     ```
