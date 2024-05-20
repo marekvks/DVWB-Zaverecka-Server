@@ -11,16 +11,22 @@ import { logout } from './endpoints/logout.js';
 
 const router = express.Router();
 
+// check if user is authorized
 router.get('/authorized', verifyAccessToken, authorized);
 
+// register user
 router.post('/register', validRegisterData, userAlreadyExists, register);
 
+// login user
 router.post('/login', validLoginData, login);
 
+// get new access token
 router.get('/accessToken', getNewAccessToken);
 
+// check refresh token, if it expires in less than 7 days, send new refresh token
 router.get('/refreshToken', checkRefreshToken);
 
+// logout user
 router.delete('/logout', logout);
 
 export default router;
