@@ -1,15 +1,19 @@
-GET http://localhost:3000/blogPost/blogPost
+GET http://localhost:8080/blogPost/blogPost
 
 ###
-GET http://localhost:3000/blogPost/blogPostUser/user
-
-###
-
-GET http://localhost:3000/blogpost/blogPostTitle/Test
+GET http://localhost:8080/blogPost/blogPostUser/user
 
 ###
 
-POST http://localhost:3000/blogPost/blogPost
+GET http://localhost:8080/blogPost/blogPostTitle/Test
+
+###
+
+GET  http://localhost:8080/blogPost/blogPost/akjhdfakjhd
+
+###
+
+POST http://localhost:8080/blogPost/blogPost
 Content-Type: application/json
 
 {
@@ -20,7 +24,7 @@ Content-Type: application/json
 
 ###
 
-PATCH http://localhost:3000/blogPost/blogPost/9a892aa0-c478-453c-95c0-e18f0f6cb762
+PATCH http://localhost:8080/blogPost/blogPost/9a892aa0-c478-453c-95c0-e18f0f6cb762
 Content-Type: application/json
 
 {
@@ -30,5 +34,5 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/blogPost/blogPost/9a892aa0-c478-453c-95c0-e18f0f6cb762
+DELETE http://localhost:8080/blogPost/blogPost/9a892aa0-c478-453c-95c0-e18f0f6cb762
 

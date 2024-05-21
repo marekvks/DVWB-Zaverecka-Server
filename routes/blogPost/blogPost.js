@@ -1,6 +1,6 @@
 import express from "express";
 import { PrismaClient } from '@prisma/client'
-import {getRandomBlogPosts, validateData, dataToUpdate} from '../../middleware/blogPost.js';
+import {getRandomBlogPosts, validateData} from '../../middleware/blogPost.js';
 import {verifyAccessToken} from '../../middleware/auth.js';
 
 const prisma = new PrismaClient();
@@ -32,6 +32,15 @@ router.get('/blogPostUser/:user', async(req, res) => {
     })
 
     res.send(test);
+});
+
+router.get('/blogPost/:id_blogpost', async (req, res) => {
+    const blogPost = await prisma.blogPost.findFirst({
+        where:{
+            id_blogpost: req.params.id_blogpost
+        }
+    });
+    res.send(blogPost);
 });
 
 router.patch('/blogPost/:id', validateData, async (req, res) => {
