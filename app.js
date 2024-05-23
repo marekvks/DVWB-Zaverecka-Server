@@ -7,6 +7,7 @@ import authRouter from './routes/auth/auth.js';
 import blogPostRouter from './routes/blogpost/blogPost.js';
 import userRouter from './routes/user/getData.js';
 import cookieParser from 'cookie-parser';
+import nodemailer from 'nodemailer';
 
 const port = process.env.PORT;
 
@@ -20,9 +21,22 @@ app.use(cors({
     'credentials': true
 }));
 
+app.use(express.static('public'));
+
 app.use('/auth', authRouter);
 app.use('/blogPost', blogPostRouter);
 app.use('/user', userRouter);
+
+
+// mail transporter
+export const transporter = nodemailer.createTransport({
+    service: 'outlook',
+    auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASSWORD
+    }
+});
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
