@@ -8,6 +8,8 @@ import { login } from './endpoints/login.js';
 import { getNewAccessToken } from './endpoints/getNewAccessToken.js';
 import { checkRefreshToken } from './endpoints/checkRefreshToken.js';
 import { logout } from './endpoints/logout.js';
+import { requestRefreshPassword } from './endpoints/requestRefreshPassword.js';
+import { refreshPassword } from './endpoints/refreshPassword.js';
 
 const router = express.Router();
 
@@ -28,5 +30,8 @@ router.get('/refreshToken', checkRefreshToken);
 
 // logout user
 router.delete('/logout', logout);
+
+router.get('/refreshPasswordCode', requestRefreshPassword);
+router.get('/refreshPassword', refreshPassword);
 
 export default router;
