@@ -32,8 +32,8 @@ app.use('/user', userRouter);
 export const transporter = nodemailer.createTransport({
     service: 'outlook',
     auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD
+        user: process.env.SMTP_EMAIL,
+        pass: process.env.SMTP_EMAIL_PASSWORD
     }
 });
 

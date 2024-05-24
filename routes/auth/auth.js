@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from "express";
-import { verifyAccessToken, validRegisterData, userAlreadyExists, validLoginData } from '../../middleware/auth.js';
+import { verifyAccessToken, validRegisterData, userAlreadyExists, validLoginData, validateForgotPasswordCode } from '../../middleware/auth.js';
 // endpoints
 import { authorized } from './endpoints/authorized.js';
 import { register } from './endpoints/register.js';
@@ -9,7 +9,7 @@ import { getNewAccessToken } from './endpoints/getNewAccessToken.js';
 import { checkRefreshToken } from './endpoints/checkRefreshToken.js';
 import { logout } from './endpoints/logout.js';
 import { requestRefreshPassword } from './endpoints/requestRefreshPassword.js';
-import { refreshPassword } from './endpoints/refreshPassword.js';
+import updatePassword from './endpoints/updatePassword.js';
 
 const router = express.Router();
 
@@ -32,6 +32,8 @@ router.get('/refreshToken', checkRefreshToken);
 router.delete('/logout', logout);
 
 router.get('/refreshPasswordCode', requestRefreshPassword);
-router.get('/refreshPassword', refreshPassword);
+router.get('/checkForgotPasswordCode', validateForgotPasswordCode, (req, res) => res.sendStatus(200));
+
+router.patch('/updatePassword', validateForgotPasswordCode, updatePassword);
 
 export default router;

@@ -41,10 +41,10 @@ export const requestRefreshPassword = async (req, res) => {
         });
 
         const info = await transporter.sendMail({
-            from: `"BlogPost Server 🤓" <${process.env.EMAIL}>`,
+            from: `"BlogPost Server 🤓" <${process.env.SMTP_EMAIL}>`,
             to: email,
-            subject: 'Test email',
-            text: `Your code for refreshing your password: ${token}\n\nDo NOT reply to this email.`,
+            subject: 'Reset password',
+            text: `Here's your code for resetting forgotten password: ${token}\n\nDo NOT reply to this email.`,
         });
     }
     catch (error) {
