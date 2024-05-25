@@ -6,7 +6,16 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const verifyAccessToken = (req, res, next) => {
+/**
+ * **Middleware**
+ * 
+ * Validates access token, if it's valid, you can access the user data via req.user
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
+export const validateAccessToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader ? authHeader.split(' ')[1] : undefined; // 'Bearer SI6L5H452JD5GFIYgfihgGHDjkh4'
     if (!token) return res.sendStatus(401);
@@ -41,6 +50,15 @@ export const verifyAccessToken = (req, res, next) => {
     });
 }
 
+/**
+ * **Middleware**
+ * 
+ * Validates refresh token, if it's valid, you can access the user data via req.user
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
 export const validateRefreshToken = (req, res, next) => {
     const refreshToken = req.cookies['refreshToken'];
     if (!refreshToken) return res.status(404).json({ 'message': 'refresh token not found.' });
@@ -74,6 +92,15 @@ export const validateRefreshToken = (req, res, next) => {
     });
 }
 
+/**
+ * **Middleware**
+ * 
+ * Validates password, if it's valid, you can access the password via req.password
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
 export const validatePassword = (req, res, next) => {
     const password = req.body.password;
 
@@ -83,22 +110,64 @@ export const validatePassword = (req, res, next) => {
     if (password.length < 8)
         return res.status(400).json({ message: 'password must be at least 8 characters long.' });
 
+    req.password = password;
+
     next();
 }
 
-export const validRegisterData = (req, res, next) => {
-    const username = req.body.username;
+/**
+ * **Middleware**
+ * 
+ * Validates email via `email-validator` package, if it's valid, you can access the email via req.email
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
+export const validateEmail = (req, res, next) => {
     const email = req.body.email;
 
     if (!validator.validate(email))
         return res.status(400).json({ message: 'invalid email.' });
 
-    if (!username || !email)
-        return res.status(400).json({ message: 'invalid data.' });
+    req.email = email;
 
     next();
 }
 
+/**
+ * **Middleware**
+ * 
+ * Validates username, if it's valid, you can access the username via req.username
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
+export const validateUsername = (req, res, next) => {
+    const username = req.body.username;
+
+    if (!username)
+        return res.status(400).json({ message: 'invalid username.' });
+
+    if (username.length < 4)
+        return res.status(400).json({ message: 'username must be at least 4 characters long.' });
+
+    req.username = username;
+
+    next();
+}
+
+/**
+ * **Middleware**
+ * 
+ * Checks if user with the same username or email already exists and if so, returns 400
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
 export const userAlreadyExists = async (req, res, next) => {
     const username = req.body.username;
     const email = req.body.email;
@@ -122,7 +191,17 @@ export const userAlreadyExists = async (req, res, next) => {
     return res.status(400).json({ message: 'username or email is already used.' });
 }
 
-export const validLoginData = async (req, res, next) => {
+/**
+ * **Middleware**
+ * 
+ * Checks if the data sent in the request body is valid for login
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
+export const validateLoginData = async (req, res, next) => {
     const email = req.body.email;
 
     const data = await prisma.user.findFirst({
@@ -151,12 +230,19 @@ export const validLoginData = async (req, res, next) => {
     next();
 }
 
+/**
+ * **Middleware**
+ * 
+ * Validates code for password reset, if it's valid, you can access the user id via req.id_user, the refresh code via req.refreshCode and the password version via req.passwordVersion
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
 export const validateForgotPasswordCode = async (req, res, next) => {
-    const email = req.body.email;
+    const email = req.email;
     const refreshCode = req.body.refreshCode;
-
-    if (!validator.validate(email))
-        return res.status(400).json({ message: 'invalid email.' });
 
     const user = await prisma.user.findFirst({
         select: {
@@ -184,8 +270,8 @@ export const validateForgotPasswordCode = async (req, res, next) => {
         });
     
         if (!tokenData)
-            return res.status(404).json({ 'message': 'no reset password codes were generated.' });
-        
+            return res.status(404).json({ 'message': 'no code generated.' });
+
         if (tokenData.expires_at < Date.now() || tokenData.used)
             return res.status(401).json({ 'message': 'code expired.' });
 

@@ -1,7 +1,7 @@
 import express from "express";
 import { PrismaClient } from '@prisma/client'
 import {getRandomBlogPosts, validateData, dataToUpdate} from '../../middleware/blogPost.js';
-import {verifyAccessToken} from '../../middleware/auth.js';
+import {validateAccessToken} from '../../middleware/auth.js';
 
 const prisma = new PrismaClient();
 
@@ -51,7 +51,7 @@ router.patch('/blogPost/:id', validateData, async (req, res) => {
     res.sendStatus(200);
 });
 
-router.post('/blogPost', verifyAccessToken, validateData, async(req, res) => {
+router.post('/blogPost', validateAccessToken, validateData, async(req, res) => {
 
     const title = req.body.title;
     const description = req.body.description;

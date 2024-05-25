@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 import { transporter } from '../../../app.js';
 
-export const requestRefreshPassword = async (req, res) => {
+const requestRefreshPassword = async (req, res) => {
     const email = req.body.email;
     // TODO: validate email
 
@@ -64,3 +64,5 @@ const generateRandomToken = () => {
 
     return token;
 }
+
+export default requestRefreshPassword;

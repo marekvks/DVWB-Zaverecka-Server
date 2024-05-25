@@ -1,6 +1,6 @@
 import { generateRefreshToken } from "./login.js";
 
-export const checkRefreshToken = (req, res) => {
+const checkRefreshToken = (req, res) => {
     const user = req.user;
 
     let currentTime = Date.now() / 1000;
@@ -18,3 +18,5 @@ export const checkRefreshToken = (req, res) => {
         res.status(200).json({ 'message': 'refresh token is still valid.' });
     }
 }
+
+export default checkRefreshToken;

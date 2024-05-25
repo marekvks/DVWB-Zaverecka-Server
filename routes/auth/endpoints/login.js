@@ -9,7 +9,7 @@ export const generateRefreshToken = (user) => {
     return token;
 }
 
-export const login = async (req, res) => {
+const login = async (req, res) => {
     const userId = req.userId;
 
     const accessToken = generateAccessToken({ id: userId, pwdVersion: req.passwordVersion });
@@ -19,3 +19,5 @@ export const login = async (req, res) => {
        .cookie('accessToken', accessToken, { httpOnly: false, secure: false, path: '/' })
        .json({ refreshTokenExpiresAt: process.env.REFRESH_TOKEN_EXPIRATION });
 }
+
+export default login;

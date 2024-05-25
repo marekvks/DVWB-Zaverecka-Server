@@ -1,11 +1,11 @@
 import express from "express";
 import { PrismaClient } from '@prisma/client';
-import { verifyAccessToken } from "../../middleware/auth.js";
+import { validateAccessToken } from "../../middleware/auth.js";
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.get('/getUser', verifyAccessToken, async (req, res) => {
+router.get('/getUser', validateAccessToken, async (req, res) => {
     const id = req.user.id;
 
     try {
@@ -26,7 +26,7 @@ router.get('/getUser', verifyAccessToken, async (req, res) => {
     }
 });
 
-router.post('/updateUser', verifyAccessToken, async (req, res) => {
+router.post('/updateUser', validateAccessToken, async (req, res) => {
     const { firstName, username } = req.body;
     const userId = req.user.id;
 

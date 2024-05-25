@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-export const register = async (req, res) => {
+const register = async (req, res) => {
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
@@ -25,3 +25,5 @@ export const register = async (req, res) => {
         return res.sendStatus(500);
     }
 }
+
+export default register;

@@ -1,4 +1,4 @@
-export const logout = async (req, res) => {
+const logout = async (req, res) => {
     res.cookie('refreshToken', null, { httpOnly: true, secure: false, path: '/' })
         .cookie('accessToken', null, { httpOnly: false, secure: false, path: '/' })
         .status(200)
@@ -6,3 +6,5 @@ export const logout = async (req, res) => {
 
     // !!! Check on client
 };
+
+export default logout;
