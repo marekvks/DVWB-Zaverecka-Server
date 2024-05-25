@@ -1,0 +1,30 @@
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
+
+const patchMe = async (req, res) => {
+    const { firstName, username } = req.body;
+    const userId = req.user.id;
+
+    try {
+        const updatedUser = await prisma.user.update({
+            where: {
+                id_user: userId
+            },
+            data: {
+                firstName,
+                username
+            }
+        });
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        console.error("Failed to update user:", error);
+        
+        if (error.code === 'P2002' && error.meta && error.meta.target.includes('username')) {
+            res.status(400).json({ message: "Username already exists. Please choose a different username." });
+        } else {
+            res.status(500).json({ message: "An unexpected error occurred." });
+        }
+    }
+};
+
+export default patchMe;
