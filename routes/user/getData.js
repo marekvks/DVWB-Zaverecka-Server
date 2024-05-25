@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/getUser', verifyAccessToken, async (req, res) => {
     const id = req.user.id;
-    console.log('id:', id);
+
     try {
         const user = await prisma.user.findFirst({
             where: {

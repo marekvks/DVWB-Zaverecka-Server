@@ -12,8 +12,8 @@ export const generateRefreshToken = (user) => {
 export const login = async (req, res) => {
     const userId = req.userId;
 
-    const accessToken = generateAccessToken({ id: userId });
-    const refreshToken = generateRefreshToken({ id: userId });
+    const accessToken = generateAccessToken({ id: userId, pwdVersion: req.passwordVersion });
+    const refreshToken = generateRefreshToken({ id: userId, pwdVersion: req.passwordVersion });
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: false, path: '/' })
        .cookie('accessToken', accessToken, { httpOnly: false, secure: false, path: '/' })

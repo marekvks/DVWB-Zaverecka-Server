@@ -3,4 +3,6 @@ export const logout = async (req, res) => {
         .cookie('accessToken', null, { httpOnly: false, secure: false, path: '/' })
         .status(200)
         .json({ 'message': 'successfully logged out.' });
+
+    // !!! Check on client
 };

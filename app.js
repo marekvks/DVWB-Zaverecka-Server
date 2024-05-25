@@ -3,16 +3,17 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import helmet from 'helmet';
-import authRouter from './routes/auth/auth.js';
-import blogPostRouter from './routes/blogpost/blogPost.js';
-import userRouter from './routes/user/getData.js';
 import cookieParser from 'cookie-parser';
 import nodemailer from 'nodemailer';
 
-const port = process.env.PORT;
+// api version routers
+import apiV1Router from './routes/api/APIv1.js';
 
+// setup
+const port = process.env.PORT;
 const app = express();
 
+// middlewares
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(helmet());
@@ -21,11 +22,11 @@ app.use(cors({
     'credentials': true
 }));
 
+// static files
 app.use(express.static('public'));
 
-app.use('/auth', authRouter);
-app.use('/blogPost', blogPostRouter);
-app.use('/user', userRouter);
+// api version routers
+app.use('/api/v1', apiV1Router);
 
 
 // mail transporter

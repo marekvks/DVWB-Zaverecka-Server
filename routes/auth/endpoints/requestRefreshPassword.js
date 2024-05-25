@@ -31,12 +31,14 @@ export const requestRefreshPassword = async (req, res) => {
             update: {
                 id_user: user.id_user,
                 token: hashedToken,
-                expires_at: Date.now() + (process.env.REFRESH_PASSWORD_TOKEN_EXPIRATION * 60 * 1000)
+                expires_at: Date.now() + (process.env.REFRESH_PASSWORD_TOKEN_EXPIRATION * 60 * 1000),
+                used: false
             },
             create: {
                 id_user: user.id_user,
                 token: hashedToken,
-                expires_at: Date.now() + (process.env.REFRESH_PASSWORD_TOKEN_EXPIRATION * 60 * 1000)
+                expires_at: Date.now() + (process.env.REFRESH_PASSWORD_TOKEN_EXPIRATION * 60 * 1000),
+                used: false
             }
         });
 
@@ -46,6 +48,8 @@ export const requestRefreshPassword = async (req, res) => {
             subject: 'Reset password',
             text: `Here's your code for resetting forgotten password: ${token}\n\nDo NOT reply to this email.`,
         });
+
+        return res.sendStatus(200);
     }
     catch (error) {
         console.log(error);

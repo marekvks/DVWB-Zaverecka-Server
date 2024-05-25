@@ -6,9 +6,7 @@ const updatePassword = async (req, res) => {
     const userId = req.id_user;
     const password = req.body.password;
     const confirmPassword = req.body.confirmPassword;
-
-    // !!! TODO: verify code -- with middleware!!!
-    // !!! Logout all users when password is changed!!!
+    const passwordVersion = req.passwordVersion;
 
     if (password != confirmPassword)
         return res.status(400).json({ 'message': 'passwords don\'t match' });
@@ -21,7 +19,17 @@ const updatePassword = async (req, res) => {
                 id_user: userId
             },
             data: {
-                password: hashedPassword
+                password: hashedPassword,
+                passwordVersion: passwordVersion + 1
+            }
+        });
+
+        await prisma.refresh_password_tokens.update({
+            where: {
+                id_user: userId
+            },
+            data: {
+                used: true
             }
         });
 
