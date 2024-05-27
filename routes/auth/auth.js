@@ -34,7 +34,7 @@ router.get('/accessToken', validateRefreshToken, getNewAccessToken);
 router.get('/refreshToken', validateRefreshToken, checkRefreshToken);
 
 // send refresh password code
-router.post('/refreshPasswordCode', requestRefreshPassword);
+router.post('/refreshPasswordCode', validateEmail, requestRefreshPassword);
 
 // check forgotten password code
 router.post('/checkForgotPasswordCode', validateEmail, validateForgotPasswordCode, (req, res) => res.sendStatus(200));

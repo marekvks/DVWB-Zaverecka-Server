@@ -31,7 +31,7 @@ app.use('/api/v1', apiV1Router);
 
 // mail transporter
 export const transporter = nodemailer.createTransport({
-    service: 'outlook',
+    service: process.env.SMTP_PROVIDER,
     auth: {
         user: process.env.SMTP_EMAIL,
         pass: process.env.SMTP_EMAIL_PASSWORD

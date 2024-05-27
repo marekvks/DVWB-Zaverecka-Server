@@ -5,8 +5,7 @@ const prisma = new PrismaClient();
 import { transporter } from '../../../app.js';
 
 const requestRefreshPassword = async (req, res) => {
-    const email = req.body.email;
-    // TODO: validate email
+    const email = req.email;
 
     const user = await prisma.user.findFirst({
         select: {

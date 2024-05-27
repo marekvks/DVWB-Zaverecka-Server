@@ -1,0 +1,6 @@
+POST http://localhost:8080/api/v1/auth/refreshPasswordCode
+Content-Type: application/json
+
+{
+    "email": "marek.vykysaly12@gmail.com"
+}

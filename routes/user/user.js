@@ -1,5 +1,5 @@
 import express from "express";
-import { verifyAccessToken } from "../../middleware/auth.js";
+import { validateAccessToken } from "../../middleware/auth.js";
 import { upload } from "../../middleware/uploadFile.js";
 const router = express.Router();
 
@@ -10,14 +10,14 @@ import patchMe from "./endpoints/patchMe.js";
 import changePassword from "./endpoints/changePassword.js";
 import changeAvatar from "./endpoints/changeAvatar.js";
 
-router.get('/@me', verifyAccessToken, getMe);
+router.get('/@me', validateAccessToken, getMe);
 
 router.get('/:id', getUser);
 
-router.patch('/@me', verifyAccessToken, patchMe);
+router.patch('/@me', validateAccessToken, patchMe);
 
-router.patch('@me/password', verifyAccessToken, changePassword)
+router.patch('@me/password', validateAccessToken, changePassword)
 
-router.patch('/@me/avatar', verifyAccessToken, upload, changeAvatar);
+router.patch('/@me/avatar', validateAccessToken, upload, changeAvatar);
 
 export default router;
