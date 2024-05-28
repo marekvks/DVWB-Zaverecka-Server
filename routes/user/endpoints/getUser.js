@@ -18,7 +18,7 @@ const getUser = async (req, res) => {
         });
 
         if (user) {
-            return res.json(user);
+            return res.status(200).json(user);
         } else {
             return res.status(404).send('User not found');
         }

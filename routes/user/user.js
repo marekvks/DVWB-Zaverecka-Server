@@ -9,10 +9,13 @@ import getUser from "./endpoints/getUser.js";
 import patchMe from "./endpoints/patchMe.js";
 import changePassword from "./endpoints/changePassword.js";
 import changeAvatar from "./endpoints/changeAvatar.js";
+import getUserViaUsername from './endpoints/getUserViaUsername.js';
 
 router.get('/@me', validateAccessToken, getMe);
 
-router.get('/:id', getUser);
+router.get('/id/:id', getUser);
+
+router.get('/:username', getUserViaUsername);
 
 router.patch('/@me', validateAccessToken, patchMe);
 
