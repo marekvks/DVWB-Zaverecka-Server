@@ -59,7 +59,7 @@ const requestRefreshPassword = async (req, res) => {
 const generateRandomToken = () => {
     let token = 0;
     while (token <= 0)
-        token = Math.round(Math.random() * 999999);
+        token = Math.round(Math.random() * (999999 - 100000 + 1)) + 100000;
 
     return token;
 }

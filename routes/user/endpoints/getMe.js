@@ -10,6 +10,11 @@ const getMe = async (req, res) => {
                 id_user: id
             },
             select: {
+                username: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                role: true,
                 password: false
             }
         });
