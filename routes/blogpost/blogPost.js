@@ -34,6 +34,16 @@ router.get('/blogPostUser/:user', async(req, res) => {
     res.send(test);
 });
 
+router.get('/blogPost/:id', validateData, async (req, res) => {
+    const blogPost = await prisma.blogPost.findMany({
+        where:{
+            id_blogpost: req.params.id
+        }
+    });
+    console.log
+    res.send(blogPost);
+});
+
 router.patch('/blogPost/:id', validateData, async (req, res) => {
 
     const object = res.locals;
