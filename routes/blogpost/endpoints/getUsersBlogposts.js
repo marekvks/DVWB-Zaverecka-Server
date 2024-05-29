@@ -1,8 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-export default getUsersBlogposts = async (req, res) => {
-    const userId = req.params.id;
+const getUsersBlogposts = async (req, res) => {
+    const userId = Number(req.params.id);
+
+    if (isNaN(userId))
+        return res.status(400).json({ 'message': 'invalid user id.' });
 
     try {
         const blogPosts = await prisma.blogPost.findMany({
@@ -22,3 +25,5 @@ export default getUsersBlogposts = async (req, res) => {
         res.sendStatus(500);
     }
 }
+
+export default getUsersBlogposts;

@@ -21,11 +21,10 @@ const changeAvatar = async (req, res) => {
 
         const fileExtension = path.extname(req.file.originalname);
         const filename = `${user.username}${fileExtension}`;
-        const filePath = path.join('uploads/avatars', filename);
 
         await prisma.user.update({
             where: { id: userId },
-            data: { avatarPath: filePath }
+            data: { avatarPath: filename }
         });
 
         res.status(200).json({ message: 'Avatar updated successfully', avatar: filePath });

@@ -7,6 +7,8 @@ const prisma = new PrismaClient();
 
 const router = express.Router();
 
+import getUsersBlogposts from "./endpoints/getUsersBlogposts.js";
+
 
 router.get('/', getRandomBlogPosts, async (req, res) => {
     res.send(res.locals);
@@ -21,6 +23,8 @@ router.get('/blogPostTitle/:title', async(req, res) => {
 
     res.send(blogPosts);
 });
+
+router.get('/user/:id', getUsersBlogposts);
 
 router.get('/blogPostUser/:user', async(req, res) => {
     const test = await prisma.blogPost.findMany({
