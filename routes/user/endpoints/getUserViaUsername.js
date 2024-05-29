@@ -1,13 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-const getMe = async (req, res) => {
-    const id = req.user.id;
+const getUserViaUsername = async (req, res) => {
+    const username = req.params.username;
 
     try {
         const user = await prisma.user.findFirst({
             where: {
-                id_user: id
+                username: username
             },
             select: {
                 id_user: true,
@@ -31,4 +31,4 @@ const getMe = async (req, res) => {
     }
 }
 
-export default getMe;
+export default getUserViaUsername;
