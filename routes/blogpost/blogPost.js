@@ -40,7 +40,6 @@ router.get('/blogPost/:id', validateData, async (req, res) => {
             id_blogpost: req.params.id
         }
     });
-    console.log
     res.send(blogPost);
 });
 
