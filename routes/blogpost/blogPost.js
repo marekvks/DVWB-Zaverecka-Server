@@ -35,7 +35,7 @@ router.get('/blogPostUser/:user', async(req, res) => {
 });
 
 router.get('/:id', validateData, async (req, res) => {
-    const blogPost = await prisma.blogPost.findMany({
+    const blogPost = await prisma.blogPost.findFirst({
         where:{
             id_blogpost: req.params.id
         }
