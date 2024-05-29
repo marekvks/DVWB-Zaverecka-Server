@@ -104,11 +104,10 @@ export const validateRefreshToken = (req, res, next) => {
 export const validatePassword = (req, res, next) => {
     const password = req.body.password;
 
-    if (!password)
-        return res.status(400).json({ message: 'invalid password.' });
+    const pwdInfo = validatePasswordRules(password);
 
-    if (password.length < 8)
-        return res.status(400).json({ message: 'password must be at least 8 characters long.' });
+    if (!pwdInfo.valid)
+        return res.status(400).json({ message: pwdInfo.message });
 
     req.password = password;
 
@@ -289,4 +288,83 @@ export const validateForgotPasswordCode = async (req, res, next) => {
         console.log(error);
         return res.sendStatus(500);
     }
+}
+
+export const validateUserPassword = async (req, res, next) => {
+    const userId = req.user.id;
+    const currentPassword = req.body.currentPassword;
+
+    const data = await prisma.user.findFirst({
+        select: {
+            password: true,
+            passwordVersion: true
+        },
+        where: {
+            id_user: userId
+        }
+    });
+
+    const matchingPwd = await bcrypt.compare(currentPassword, data.password);
+
+    if (!matchingPwd)
+        return res.status(400).json({ 'message': 'invalid password.' });
+
+    req.id_user = userId;
+    req.passwordVersion = data.passwordVersion;
+
+    next();
+}
+
+export const updatePassword = async (req, res, next) => {
+    const userId = req.id_user;
+    const password = req.body.password;
+    const confirmPassword = req.body.confirmPassword;
+    const passwordVersion = req.passwordVersion;
+
+    if (password != confirmPassword)
+        return res.status(400).json({ 'message': 'passwords don\'t match' });
+
+    const pwdInfo = validatePasswordRules(password);
+
+    if (!pwdInfo.valid)
+        return res.status(400).json({ message: pwdInfo.message });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    try {
+        await prisma.user.update({
+            where: {
+                id_user: userId
+            },
+            data: {
+                password: hashedPassword,
+                passwordVersion: passwordVersion + 1
+            }
+        });
+
+        await prisma.refresh_password_tokens.update({
+            where: {
+                id_user: userId
+            },
+            data: {
+                used: true
+            }
+        });
+
+        next();
+    }
+    catch (error) {
+        console.log(error);
+        return res.sendStatus(500);
+    }
+}
+
+const validatePasswordRules = (password) => {
+    if (!password)
+        return { 'valid': false, 'message': 'invalid password.' };
+
+    if (password.length < 8)
+        return { 'valid': false, 'message': 'password must be at least 8 characters long.' };
+
+    return { 'valid': true, 'message': 'password valid.' };
 }

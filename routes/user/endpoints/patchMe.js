@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const patchMe = async (req, res) => {
-    const { firstName, username } = req.body;
+    const { firstName, lastName, username, email } = req.body;
     const userId = req.user.id;
 
     try {
@@ -11,8 +11,10 @@ const patchMe = async (req, res) => {
                 id_user: userId
             },
             data: {
-                firstName,
-                username
+                firstName: firstName,
+                lastName: lastName,
+                username: username,
+                email: email
             }
         });
         res.status(200).json(updatedUser);

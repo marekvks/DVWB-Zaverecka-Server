@@ -1,5 +1,5 @@
 import express from "express";
-import { validateAccessToken } from "../../middleware/auth.js";
+import { validateAccessToken, validateUserPassword, updatePassword } from "../../middleware/auth.js";
 import { upload } from "../../middleware/uploadFile.js";
 const router = express.Router();
 
@@ -13,14 +13,14 @@ import getUserViaUsername from './endpoints/getUserViaUsername.js';
 
 router.get('/@me', validateAccessToken, getMe);
 
+router.patch('/@me', validateAccessToken, patchMe);
+
+router.patch('/@me/password', validateAccessToken, validateUserPassword, updatePassword, (req, res) => res.sendStatus(204));
+
+router.patch('/@me/avatar', validateAccessToken, upload, changeAvatar);
+
 router.get('/id/:id', getUser);
 
 router.get('/:username', getUserViaUsername);
-
-router.patch('/@me', validateAccessToken, patchMe);
-
-router.patch('@me/password', validateAccessToken, changePassword)
-
-router.patch('/@me/avatar', validateAccessToken, upload, changeAvatar);
 
 export default router;

@@ -10,6 +10,7 @@ const getUserViaUsername = async (req, res) => {
                 username: username
             },
             select: {
+                id_user: true,
                 username: true,
                 firstName: true,
                 lastName: true,

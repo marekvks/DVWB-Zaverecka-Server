@@ -13,6 +13,12 @@ const getUser = async (req, res) => {
                 id_user: id
             },
             select: {
+                id_user: true,
+                username: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                role: true,
                 password: false
             }
         });
