@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 const router = express.Router();
 
 
-router.get('/blogPost', getRandomBlogPosts, async (req, res) => {
+router.get('/', getRandomBlogPosts, async (req, res) => {
     res.send(res.locals);
 });
 
@@ -25,7 +25,7 @@ router.get('/blogPostTitle/:title', async(req, res) => {
 router.get('/blogPostUser/:user', async(req, res) => {
     const test = await prisma.blogPost.findMany({
         where: {
-            autohor: {
+            author: {
                 username: req.params.user
             }
         }
@@ -34,7 +34,7 @@ router.get('/blogPostUser/:user', async(req, res) => {
     res.send(test);
 });
 
-router.get('/blogPost/:id', validateData, async (req, res) => {
+router.get('/:id', validateData, async (req, res) => {
     const blogPost = await prisma.blogPost.findMany({
         where:{
             id_blogpost: req.params.id
@@ -44,7 +44,7 @@ router.get('/blogPost/:id', validateData, async (req, res) => {
     res.send(blogPost);
 });
 
-router.patch('/blogPost/:id', validateData, async (req, res) => {
+router.patch('/:id', validateData, async (req, res) => {
 
     const object = res.locals;
 
@@ -61,7 +61,7 @@ router.patch('/blogPost/:id', validateData, async (req, res) => {
     res.sendStatus(200);
 });
 
-router.post('/blogPost', validateAccessToken, validateData, async(req, res) => {
+router.post('/', validateAccessToken, validateData, async(req, res) => {
 
     const title = req.body.title;
     const description = req.body.description;
@@ -81,7 +81,7 @@ router.post('/blogPost', validateAccessToken, validateData, async(req, res) => {
     res.sendStatus(201);
 });
 
-router.delete('/blogPost/:id', async(req, res) => {
+router.delete('/:id', async(req, res) => {
     await prisma.blogPost.deleteMany({
         where:{
             id_blogpost: req.params.id
