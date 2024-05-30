@@ -18,6 +18,7 @@ model user {
   avatarPath              String?
   passwordVersion         Int
   blogPosts               blogPost[]               @relation("Author")
+  comment                 comment[]
   refresh_password_tokens refresh_password_tokens?
 }
 
@@ -30,6 +31,7 @@ model blogPost {
   content     String
   id_author   Int
   autohor     user       @relation("Author", fields: [id_author], references: [id_user], onDelete: Cascade)
+  comment     comment[]
   categories  category[] @relation("blogPostTocategory")
 }
 
@@ -46,6 +48,16 @@ model refresh_password_tokens {
   expires_at BigInt?
   used       Boolean
   user       user    @relation(fields: [id_user], references: [id_user], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model comment {
+  id_comment  Int      @unique @default(autoincrement())
+  content     String
+  date        DateTime @default(now())
+  id_author   Int
+  id_blogpost String
+  user        user     @relation(fields: [id_author], references: [id_user], onDelete: Cascade, onUpdate: NoAction)
+  blogPost    blogPost @relation(fields: [id_blogpost], references: [id_blogpost], onDelete: Cascade, onUpdate: NoAction)
 }
 
 enum role {
