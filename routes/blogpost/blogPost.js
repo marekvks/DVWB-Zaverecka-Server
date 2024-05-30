@@ -15,6 +15,7 @@ router.get('/', getRandomBlogPosts, async (req, res) => {
 });
 
 router.get('/blogPostTitle/:title', async(req, res) => {
+    console.log(req.params.title)
     const blogPosts = await prisma.blogPost.findMany({
         where:{
             title: req.params.title
