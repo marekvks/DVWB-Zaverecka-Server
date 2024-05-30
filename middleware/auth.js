@@ -26,7 +26,8 @@ export const validateAccessToken = (req, res, next) => {
         try {
             const userData = await prisma.user.findUnique({
                 select: {
-                    passwordVersion: true
+                    passwordVersion: true,
+                    avatarPath: true
                 },
                 where: {
                     id_user: user.id
@@ -36,6 +37,7 @@ export const validateAccessToken = (req, res, next) => {
             if (!userData) return res.sendStatus(401);
 
             if (user.pwdVersion === userData.passwordVersion) {
+                user.avatarPath = userData.avatarPath;
                 req.user = user;
                 return next();
             }

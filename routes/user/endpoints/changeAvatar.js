@@ -12,7 +12,7 @@ const changeAvatar = async (req, res) => {
 
     try {
         const user = await prisma.user.findUnique({
-            where: { id: userId }
+            where: { id_user: userId }
         });
 
         if (!user) {
@@ -20,14 +20,14 @@ const changeAvatar = async (req, res) => {
         }
 
         const fileExtension = path.extname(req.file.originalname);
-        const filename = `${user.username}${fileExtension}`;
+        const filename = req.filename;
 
         await prisma.user.update({
-            where: { id: userId },
+            where: { id_user: userId },
             data: { avatarPath: filename }
         });
 
-        res.status(200).json({ message: 'Avatar updated successfully', avatar: filePath });
+        res.status(200).json({ message: 'Avatar updated successfully', avatar: filename });
     } catch (error) {
         console.error("Failed to update avatar:", error);
         res.status(500).json({ message: "An unexpected error occurred" });

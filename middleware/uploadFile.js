@@ -1,6 +1,7 @@
 import multer from 'multer';
 import path from 'path';
 import { PrismaClient } from '@prisma/client';
+import { v4 as uuid } from 'uuid';
 
 const prisma = new PrismaClient();
 
@@ -11,12 +12,15 @@ const storage = multer.diskStorage({
     filename: async (req, file, cb) => {
         const userId = req.user.id;
         const user = await prisma.user.findUnique({
-            where: { id: userId }
+            where: {
+                id_user: userId
+            }
         });
 
         if (user) {
             const fileExtension = path.extname(file.originalname);
-            const filename = `${user.username}${fileExtension}`;
+            const filename = `${uuid()}${fileExtension}`;
+            req.filename = filename;
             cb(null, filename);
         } else {
             cb(new Error('User not found'), false);
@@ -25,7 +29,7 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png/;
+    const allowedTypes = /jpeg|jpg|png|gif/;
     const mimetype = allowedTypes.test(file.mimetype);
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
 
@@ -38,6 +42,6 @@ const fileFilter = (req, file, cb) => {
 
 export const upload = multer({
     storage: storage,
-    limits: { fileSize: 2 * 1024 * 1024 },
+    limits: { fileSize: 10 * 1024 * 1024 },
     fileFilter: fileFilter
 }).single('avatar');
