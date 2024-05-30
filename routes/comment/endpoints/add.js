@@ -9,7 +9,7 @@ const add = async (req, res) => {
 
     try {
         //check user
-        const user = await prisma.user.findUnique({
+        const user = await prisma.user.findFirst({
         where: { id_user: userId },
         });
         if (!user) {
