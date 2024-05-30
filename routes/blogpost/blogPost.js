@@ -44,11 +44,16 @@ router.get('/:id', validateData, async (req, res) => {
             id_blogpost: req.params.id
         }
     });
-    res.send(blogPost);
+
+    // Validace where? - Marek
+    if (blogPost == null) {
+        return res.sendStatus(404);
+    }
+
+    res.status(200).send(blogPost);
 });
 
 router.patch('/:id', validateData, async (req, res) => {
-
     const object = res.locals;
 
     await prisma.blogPost.update({
@@ -57,6 +62,7 @@ router.patch('/:id', validateData, async (req, res) => {
         },
         data:{
             title: req.body.title,
+            description: req.body.description,
             content: req.body.content
         }
     })
