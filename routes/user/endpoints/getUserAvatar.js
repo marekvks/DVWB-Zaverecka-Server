@@ -28,14 +28,14 @@ const getUserAvatar = async (req, res) => {
 
     const avatarPath = user.avatarPath;
 
-    if (!avatarPath) {
-        return res.status(404).json({ error: 'avatar not found.' });
-    }
+    let fullPath = "";
 
-    const fullPath = path.join(__dirname, '..', '..', '..', 'uploads', 'avatars', avatarPath);
+    if (!avatarPath) fullPath = getPath('avatar-default.jpg');
+    else fullPath = getPath(avatarPath);
+
 
     if (!fs.existsSync(fullPath)) {
-        return res.status(404).json({ error: 'avatar not found.' });
+        fullPath = getPath('avatar-default.jpg');
     }
 
     res.sendFile(fullPath, (err) => {
@@ -44,6 +44,10 @@ const getUserAvatar = async (req, res) => {
             res.status(500).json({ error: 'failed to send file.' });
         }
     });
+}
+
+export const getPath = (filename) => {
+    return path.join(__dirname, '..', '..', '..', 'uploads', 'avatars', filename);
 }
 
 export default getUserAvatar;

@@ -5,6 +5,8 @@ import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 
+import { getPath } from './getUserAvatar.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -16,14 +18,13 @@ const getAvatar = async (req, res) => {
     const user = req.user;
     const avatarPath = req.user.avatarPath;
 
-    if (!avatarPath) {
-        return res.status(404).json({ error: 'avatar not found.' });
-    }
-    
-    const fullPath = path.join(__dirname, '..', '..', '..', 'uploads', 'avatars', avatarPath);
+    let fullPath = "";
+
+    if (!avatarPath) fullPath = getPath('avatar-default.jpg');
+    else fullPath = getPath(avatarPath);
     
     if (!fs.existsSync(fullPath)) {
-        return res.status(404).json({ error: 'avatar not found.' });
+        fullPath = getPath('avatar-default.jpg');
     }
 
     res.sendFile(fullPath, (err) => {
