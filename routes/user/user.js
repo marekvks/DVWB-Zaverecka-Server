@@ -12,6 +12,11 @@ import getAvatar from "./endpoints/getAvatar.js";
 import getUserAvatar from "./endpoints/getUserAvatar.js";
 import getUserViaUsername from './endpoints/getUserViaUsername.js';
 
+// routers
+import followsRouter from './follow/follows.js';
+
+router.use('/follow', followsRouter);
+
 router.get('/@me', validateAccessToken, getMe);
 
 router.patch('/@me', validateAccessToken, patchMe);

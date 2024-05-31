@@ -63,9 +63,9 @@ model comment {
 }
 
 model user_follow {
-  id_follow                          Int  @unique @default(autoincrement())
   id_follower                        Int
   id_followed                        Int
+  id_follow                          Int  @unique @default(autoincrement())
   user_user_follow_id_followedTouser user @relation("user_follow_id_followedTouser", fields: [id_followed], references: [id_user], onDelete: Cascade, onUpdate: NoAction)
   user_user_follow_id_followerTouser user @relation("user_follow_id_followerTouser", fields: [id_follower], references: [id_user], onDelete: Cascade, onUpdate: NoAction)
 }

@@ -1,17 +1,21 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-const getFollowedUsers = async (req, res) => {
-    const id = req.params.userId;
+const getFollowing = async (req, res) => {
+    const id = Number(req.params.userId);
+
+    if (isNaN(id))
+        return res.status(400).json({ 'message': 'invalid user id.' });
 
     try {
-        await prisma.user_follow.findMany({
+        const followedUsers = await prisma.user_follow.findMany({
             where: {
                 id_follower: id
             },
             select: {
                 id_followed: true,
-                id_followed: true
+                id_follower: true,
+                id_follow: true
             }
         });
 
@@ -27,4 +31,4 @@ const getFollowedUsers = async (req, res) => {
     }
 }
 
-export default getFollowedUsers;
+export default getFollowing;

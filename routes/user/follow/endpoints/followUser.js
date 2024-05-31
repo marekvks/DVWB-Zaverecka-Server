@@ -1,3 +1,6 @@
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
+
 const followUser = async (req, res) => {
     const followerId = req.user.id;
     const followedId = Number(req.body.followedId);
