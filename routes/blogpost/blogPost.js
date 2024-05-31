@@ -1,6 +1,6 @@
 import express from "express";
 import { PrismaClient } from '@prisma/client'
-import {getRandomBlogPosts, validateData, dataToUpdate} from '../../middleware/blogPost.js';
+import {getRandomBlogPosts, validateData} from '../../middleware/blogPost.js';
 import {validateAccessToken} from '../../middleware/auth.js';
 
 const prisma = new PrismaClient();
@@ -15,10 +15,10 @@ router.get('/', getRandomBlogPosts, async (req, res) => {
 });
 
 router.get('/blogPostTitle/:title', async(req, res) => {
-    console.log(req.params.title)
+
     const blogPosts = await prisma.blogPost.findMany({
         where:{
-            title: req.params.title
+            title: {contains: req.params.title,  mode: 'insensitive'}
         }
     });
 
