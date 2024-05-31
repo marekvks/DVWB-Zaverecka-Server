@@ -15,8 +15,8 @@ const allFromPost = async (req, res) => {
       }
     });
 
-    if (!comments) {
-      return res.status(404).json({ error: 'Blog post not found' });
+    if (!comments || comments.length <= 0) {
+      return res.status(404).json({ 'messsage': 'no blogpost found.' });
     }
 
     res.status(200).json(comments);

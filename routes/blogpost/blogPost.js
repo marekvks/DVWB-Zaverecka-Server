@@ -36,6 +36,11 @@ router.get('/blogPostUser/:user', async(req, res) => {
         }
     })
 
+    // Validace where? - Marek
+    if (!blogPost || blogPost.length <= 0) {
+        return res.sendStatus(404);
+    }
+
     res.send(test);
 });
 
