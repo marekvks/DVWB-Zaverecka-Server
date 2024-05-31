@@ -35,6 +35,7 @@ model blogPost {
   autohor     user       @relation("Author", fields: [id_author], references: [id_user], onDelete: Cascade)
   comment     comment[]
   categories  category[] @relation("blogPostTocategory")
+  likes       Int        @default(0)
 }
 
 model category {
