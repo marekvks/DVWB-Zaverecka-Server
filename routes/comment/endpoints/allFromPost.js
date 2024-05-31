@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const allFromPost = async (req, res) => {
-    const { postId } = req.params;
+  const postId = req.params.id;
 
   try {
     const comments = await prisma.comment.findMany({
