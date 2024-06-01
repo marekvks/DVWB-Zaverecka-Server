@@ -524,10 +524,10 @@
          \- 500 Internal Server Error
     ```
 # Blogpost
-- GET === /blogPost
+- GET === /
   Expected HTTP request
   ```
-  GET http://localhost:8080/blogPost/mainPage
+  GET http://localhost:8080/blogPost/
 
   {
   }
@@ -537,6 +537,21 @@
     --- 200 OK
      |- 400 Bad Request
   ```
+
+- GET === /user/:id
+  Expected HTTP request
+  ```
+  GET http://localhost:8080/user/:id
+
+  {
+  }
+  ```
+  Responses
+  ```
+    --- 200 OK
+     |- 400 Bad Request
+  ```
+  
 - GET === /blogPostTitle/:title
   Expected HTTP request
   ```
@@ -564,10 +579,10 @@
   |- 400 Bad Request
   ```
 
-  - GET ===/blogPost/:id_blogpost
+  - GET ===/:id
   Expected HTTP request
   ```
-    GET http://localhost:8080/blogPost/blogPost/:id_blogpost
+    GET http://localhost:8080/blogPost/:id
 
   {
   }
@@ -578,10 +593,10 @@
   |- 400 Bad Request
   ```
   
-- PATCH === /blogPost/:id
+- PATCH === /:id
   Expected HTTP request
    ```
-  PATCH http://localhost:8080/blogPost/blogPost:id
+  PATCH http://localhost:8080/blogPost:id
     Content-Type: application/json
 
     {    
@@ -595,10 +610,10 @@
     --- 200 OK
     |- 400 Bad Request: no token || invalid id || invalid body
   ```
-- POST === /blogPost
+- POST === /
    Expected HTTP request
    ```
-  POST http://localhost:8080/blogPost/blogPost
+  POST http://localhost:8080/blogPost/
     Content-Type: application/json
 
     {
@@ -612,10 +627,10 @@
     --- 200 OK
     |- 400 Bad Request: no token || invalid id || invalid body
   ```
-- DELETE === /blogPost
+- DELETE === /:id
   Expected HTTP request
   ```
-  DELETE http://localhost:8080/blogPost/blogPost:id
+  DELETE http://localhost:8080/blogPost:id
 
     {
     }
