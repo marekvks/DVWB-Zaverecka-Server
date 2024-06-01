@@ -1,13 +1,18 @@
 # Jak na spuštění projektu
-1. Nejprve je potřeba si stáhnout jak sevrery (tento repozitář), tak clien. Odkaz naleznete zde [DVWB-Zaverecka-Client](https://github.com/marekvks/DVWB-Zaverecka-Client).
+1. Stáhnutí repozitáře
+
+```bash
+git clone https://github.com/marekvks/DVWB-Zaverecka-Server.git
+```
 
 2. Po otevření je potřeba spustit v obou souborech příkaz:
 ```bash
 npm i
 ```
-Tento příkaz nám nainstaluje všechny balíčky co budeme potřebovat.
+Tento příkaz nám nainstaluje všechny dependence, které jsou potřeba ke spuštění serveru.
 
-3. Nyní je potřeba spustit příkaz (pouze v souboru DVWB-Zaverecka-Server)
+
+3. Nyní je potřeba stáhnout schéma databáze
 ```bash
 npx prisma db pull
 ```
@@ -17,7 +22,10 @@ npx prisma generate
 ```
 Tímto krokem nám bude komunikace s databází fungovat správně
 
-4. Nyní už stačí jen soubory spustit a to uděláme následujícím příkazem:
+4. Nastavení enviromentální proměnných
+  - v kořenovém adresáři udělat soubor `.env` a vložit do něj proměnné z `.env.template`, ještě je potřeba je správně nastavit
+
+5. Nyní už stačí jen soubory spustit a to uděláme následujícím příkazem:
 ```bash
 npm run dev
 # nebo
@@ -27,4 +35,3 @@ pnpm dev
 # nebo
 bun dev
 ```
-5. Otevřete Váš webový prohlížeč a přejděte na [http://localhost:3000](http://localhost:3000).
