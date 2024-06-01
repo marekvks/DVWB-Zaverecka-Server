@@ -22,7 +22,10 @@ npx prisma generate
 ```
 Tímto krokem nám bude komunikace s databází fungovat správně
 
-4. Nyní už stačí jen soubory spustit a to uděláme následujícím příkazem:
+4. Nastavení enviromentální proměnných
+  - v kořenovém adresáři udělat soubor `.env` a vložit do něj proměnné z `.env.template`, ještě je potřeba je správně nastavit
+
+5. Nyní už stačí jen soubory spustit a to uděláme následujícím příkazem:
 ```bash
 npm run dev
 # nebo
