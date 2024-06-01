@@ -630,7 +630,7 @@
 - DELETE === /:id
   Expected HTTP request
   ```
-  DELETE http://localhost:8080/blogPost:id
+  DELETE http://localhost:8080/:id
 
     {
     }
