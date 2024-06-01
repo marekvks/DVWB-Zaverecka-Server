@@ -523,3 +523,105 @@
          |- 404 Not Found: blogpost not found
          \- 500 Internal Server Error
     ```
+  ## Blogpost
+- GET === /blogPost
+  Expected HTTP request
+  ```
+  GET http://localhost:8080/blogPost/mainPage
+
+  {
+  }
+  ```
+  Responses
+  ```
+    --- 200 OK
+     |- 400 Bad Request
+  ```
+- GET === /blogPostTitle/:title
+  Expected HTTP request
+  ```
+    GET http://localhost:8080/blogPost/blogPostTitle/:title
+
+  {
+  }
+  ```
+  Responses
+  ```
+    --- 200 OK
+    |- 400 Bad Request
+  ```
+- GET === /blogPostUser/:user
+  Expected HTTP request
+  ```
+    GET http://localhost:8080/blogPost/blogPostUser/:user
+
+  {
+  }
+  ```
+  Responses
+  ```
+    --- 200 OK
+  |- 400 Bad Request
+  ```
+
+  - GET ===/blogPost/:id_blogpost
+  Expected HTTP request
+  ```
+    GET http://localhost:8080/blogPost/blogPost/:id_blogpost
+
+  {
+  }
+  ```
+  Responses
+  ```
+    --- 200 OK
+  |- 400 Bad Request
+  ```
+  
+- PATCH === /blogPost/:id
+  Expected HTTP request
+   ```
+  PATCH http://localhost:8080/blogPost/blogPost:id
+    Content-Type: application/json
+
+    {    
+        "title": "{TITLE}",
+        "content": "{CONTENT}",
+        "id_author": {ID_AUTHOR}
+    }
+  ```
+  Responses
+  ```
+    --- 200 OK
+    |- 400 Bad Request: no token || invalid id || invalid body
+  ```
+- POST === /blogPost
+   Expected HTTP request
+   ```
+  POST http://localhost:8080/blogPost/blogPost
+    Content-Type: application/json
+
+    {
+        "title": "TITLE",
+        "content": "{CONTENT}",
+        "id_author": {ID_AUTHOR}
+    }
+  ```
+   Responses
+  ```
+    --- 200 OK
+    |- 400 Bad Request: no token || invalid id || invalid body
+  ```
+- DELETE === /blogPost
+  Expected HTTP request
+  ```
+  DELETE http://localhost:8080/blogPost/blogPost:id
+
+    {
+    }
+  ```
+   Responses
+  ```
+    --- 200 OK
+    |- 400 Bad Request: no token || invalid id
+  ```
