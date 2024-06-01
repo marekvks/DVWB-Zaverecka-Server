@@ -14,6 +14,8 @@ router.get('/', getRandomBlogPosts, async (req, res) => {
     res.send(res.locals);
 });
 
+router.get('/user/:id', getUsersBlogposts);
+
 router.get('/blogPostTitle/:title', async(req, res) => {
     
     try{
