@@ -523,7 +523,7 @@
          |- 404 Not Found: blogpost not found
          \- 500 Internal Server Error
     ```
-  # Blogpost
+# Blogpost
 - GET === /blogPost
   Expected HTTP request
   ```
