@@ -11,6 +11,7 @@ npm i
 ```
 Tento příkaz nám nainstaluje všechny dependence, které jsou potřeba ke spuštění serveru.
 
+
 3. Nyní je potřeba stáhnout schéma databáze
 ```bash
 npx prisma db pull
