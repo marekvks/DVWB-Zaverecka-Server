@@ -1,6 +1,6 @@
 import express from "express";
 import { PrismaClient } from '@prisma/client'
-import {getRandomBlogPosts, validateData} from '../../middleware/blogPost.js';
+import {getRandomBlogPosts} from '../../middleware/blogPost.js';
 import {validateAccessToken} from '../../middleware/auth.js';
 
 const prisma = new PrismaClient();
@@ -81,17 +81,25 @@ router.get('/:id', async (req, res) => {
     
 });
 
-router.patch('/:id', validateAccessToken, validateData, async (req, res) => {
+router.patch('/:id', validateAccessToken, async (req, res) => {
     try{
+
+        let title = req.body.title;
+        let description = req.body.description;
+        let content = req.body.content;
+
+        if(title == '' || description == ''|| content == ''){
+            return res.sendStatus(401);
+        }
 
     await prisma.blogPost.update({
         where:{
             id_blogpost: req.params.id
         },
         data:{
-            title: req.body.title,
-            description: req.body.description,
-            content: req.body.content
+            title: title,
+            description: description,
+            content: content
         }
     })
 
@@ -100,25 +108,6 @@ router.patch('/:id', validateAccessToken, validateData, async (req, res) => {
     catch(error){
         console.error(error);
         res.sendStatus(500);
-    }
-});
-
-router.patch('/addLike/:id', validateAccessToken, async(req, res) => {
-    try{
-    
-    await prisma.blogPost.update({
-        where:{
-            id_blogpost: req.params.id
-        },
-        data:{
-           likes: { value: { increment: 1 } }
-        }
-    })
-
-    res.sendStatus(200);
-    }
-    catch(error){
-
     }
 });
 
