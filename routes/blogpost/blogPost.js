@@ -130,7 +130,7 @@ router.post('/', validateAccessToken, async(req, res) => {
         let content = req.body.content;
         let id_author = req.user.id;
 
-        if(title = '' || description == ''|| content == ''){
+        if(title == '' || description == ''|| content == ''){
           return res.sendStatus(401);
         }
 
