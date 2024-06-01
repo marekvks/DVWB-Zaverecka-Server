@@ -43,7 +43,7 @@ router.get('/blogPost/:id_blogpost', async (req, res) => {
     res.send(blogPost);
 });
 
-router.patch('/blogPost/:id', validateData, async (req, res) => {
+router.patch('/blogPost/:id', async (req, res) => {
 
     const object = res.locals;
 
@@ -60,7 +60,7 @@ router.patch('/blogPost/:id', validateData, async (req, res) => {
     res.sendStatus(200);
 });
 
-router.post('/blogPost', verifyAccessToken, validateData, async(req, res) => {
+router.post('/blogPost', verifyAccessToken, async(req, res) => {
 
     const title = req.body.title;
     const description = req.body.description;
