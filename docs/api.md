@@ -1,7 +1,3 @@
-to see api documentation, open [swagger editor](https://editor.swagger.io) and paste the text from [api.yaml](https://github.com/marekvks/DVWB-Zaverecka-Server/blob/main/docs/api.yaml) in the editor
-
-# Endpoints
-> This will be transfered to swagger eventually
 ## Auth
 - POST === /auth/register
     Register a user
@@ -22,10 +18,6 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
     ```
         --- 201 Created
          \- 400 Bad Request: username or email is already   used || invalid email || invalid data
-    ```
-    201 response body
-    ```
-        None
     ```
 - POST === /auth/login
     Log-in as a user
@@ -54,10 +46,12 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
             "AccessTokenExpiresIn": "{EXPIRATION}"
         }
     ```
-- GET === /auth/loggedIn
+- GET === /auth/authorized
+    Check if user is authorized
+    
     Expected HTTP request
     ```
-        GET http://localhost:8080/auth/loggedIn
+        GET http://localhost:8080/auth/authorized
         Authorization: Bearer {ACCESS_TOKEN}
 
         {
@@ -68,14 +62,12 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
     --- 200 OK
      \- 401 Unauthorized: invalid token
     ```
-    200 response body
-    ```
-        None
-    ```
-- GET === /auth/token
+- GET === /auth/accessToken
+    Get new access token
+
     Expected HTTP request
     ```
-        POST http://localhost:8080/auth/token
+        GET http://localhost:8080/auth/accessToken
         Cookie: refreshToken={REFRESH_TOKEN}; Path=/; HttpOnly
 
         {
@@ -84,7 +76,7 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
     Responses
     ```
         --- 200 OK
-         |- 403 Forbidden: invalid refresh token
+         |- 401 Unauthorized: invalid refresh token
          \- 500 Internal Server Error
     ```
     200 response
@@ -97,10 +89,12 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
             "expiresIn": "{EXPIRATION}"
         }
     ```
-- DELETE === /auth/logout
+- GET === /auth/refreshToken
+    Get new refresh token
+
     Expected HTTP request
     ```
-        POST http://localhost:8080/auth/token
+        GET http://localhost:8080/auth/refreshToken
         Cookie: refreshToken={REFRESH_TOKEN}; Path=/; HttpOnly
 
         {
@@ -108,9 +102,50 @@ to see api documentation, open [swagger editor](https://editor.swagger.io) and p
     ```
     Responses
     ```
+        --- 200 OK: current refresh token is still valid
+         |- 201 Created: new refresh token
+         |- 401 Unauthorized: invalid refresh token
+         \- 500 Internal Server Error
+    ```
+    200 response
+    ```
+        HTTP/1.1 200 OK
+
+        {
+            "message": "refresh token is still valid."
+        }
+    ```
+    201 response
+    ```
+        HTTP/1.1 200 Created
+        Set-Cookie: refreshToken={REFRESH_TOKEN}; Path=/;
+
+        {
+            "refreshToken": {REFRESH_TOKEN}
+            "expiresIn": {EXPIRATION}
+        }
+    ```
+- DELETE === /auth/logout
+    Logout
+
+    Expected HTTP request
+    ```
+        DELETE http://localhost:8080/auth/logout
+
+        {
+        }
+    ```
+    Responses
+    ```
         --- 204 No Content: deleted
-         |- 401 Unauthorized: invalid token
-         \- 404 Not Found: token not found
+    ```
+    204 response
+    ```
+        HTTP/1.1 200 Created
+        Set-Cookie: refreshToken=null; Path=/; accessToken=null; Path=/;
+
+        {
+        }
     ```
 ## User
 - GET === /getUser
